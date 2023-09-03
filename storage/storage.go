@@ -9,23 +9,23 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var storage *Storage
+//var storage *Stor
 
 type Storage struct {
 	db *sql.DB
 }
 
-func InitDb() *Storage {
+func InitDb() Stor {
 	db, err := sql.Open("mysql", "root:serpent@/tasks")
 	if err != nil {
 		fmt.Println("Ошибка:", err)
 	} else {
 		fmt.Println("Есть контакт")
 	}
-	storage = &Storage{
+	storage := Storage{
 		db: db,
 	}
-	return storage
+	return &storage
 }
 
 // Получение списка задач
@@ -47,7 +47,6 @@ func (s *Storage) GetTasks() ([]task.Tasks, error) {
 		var t task.Tasks
 		err := res.Scan(t.Open(), t.Close(), t.AuthorName(), t.AssignedName(), t.Title(), t.Content())
 		checkReturn(tasks, err)
-
 		tasks = append(tasks, t)
 	}
 	return tasks, nil
@@ -78,7 +77,6 @@ func (s *Storage) GetTaskId(author int) ([]task.Tasks, error) {
 
 // Создание новой задачи
 func (s *Storage) CreateTask(t []task.Tasks) {
-
 	tx, err := s.db.Begin()
 	check(err)
 	stmt, err := s.db.Prepare("INSERT INTO `tasks` " +
