@@ -15,7 +15,8 @@ const (
 )
 
 func main() {
-	db := storage.InitDb()
+	var db storage.Stor
+	db = storage.InitDb()
 	tasksList := createTaskList()
 
 	fmt.Println("Получение всех задач")
